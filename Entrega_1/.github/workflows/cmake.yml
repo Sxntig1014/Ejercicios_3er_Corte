@@ -1,0 +1,26 @@
+name: Compilar ejercicios
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar dependencias
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libboost-all-dev
+
+      - name: Configurar CMake
+        run: cmake -S Entrega_1 -B build
+
+      - name: Compilar ejercicios
+        run: cmake --build build
