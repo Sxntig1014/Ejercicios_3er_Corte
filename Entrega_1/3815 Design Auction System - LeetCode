@@ -1,0 +1,38 @@
+#include <unordered_map>
+#include <set>
+#include <utility>
+
+class AuctionSystem {
+private:
+    std::unordered_map<int, std::set<std::pair<int, int>>> itemBids;
+    std::unordered_map<int, std::unordered_map<int, int>> userBids;
+
+public:
+    AuctionSystem() {}
+    
+    void addBid(int userId, int itemId, int bidAmount) {
+        if (userBids[itemId].count(userId)) {
+            int oldAmount = userBids[itemId][userId];
+            itemBids[itemId].erase({oldAmount, userId});
+        }
+        userBids[itemId][userId] = bidAmount;
+        itemBids[itemId].insert({bidAmount, userId});
+    }
+    
+    void updateBid(int userId, int itemId, int newAmount) {
+        addBid(userId, itemId, newAmount);
+    }
+    
+    void removeBid(int userId, int itemId) {
+        int oldAmount = userBids[itemId][userId];
+        userBids[itemId].erase(userId);
+        itemBids[itemId].erase({oldAmount, userId});
+    }
+    
+    int getHighestBidder(int itemId) {
+        if (itemBids.count(itemId) == 0 || itemBids[itemId].empty()) {
+            return -1;
+        }
+        return itemBids[itemId].rbegin()->second;
+    }
+};
