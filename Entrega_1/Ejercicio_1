@@ -1,0 +1,32 @@
+#include <string>
+#include <unordered_map>
+
+class UndergroundSystem {
+private:
+    std::unordered_map<int, std::pair<std::string, int>> checkIns;
+    std::unordered_map<std::string, std::pair<double, int>> routeData;
+
+public:
+    UndergroundSystem() {}
+    
+    void checkIn(int id, std::string stationName, int t) {
+        checkIns[id] = {stationName, t};
+    }
+    
+    void checkOut(int id, std::string stationName, int t) {
+        auto checkInInfo = checkIns[id];
+        checkIns.erase(id);
+        
+        std::string route = checkInInfo.first + "->" + stationName;
+        int duration = t - checkInInfo.second;
+        
+        routeData[route].first += duration;
+        routeData[route].second += 1;
+    }
+    
+    double getAverageTime(std::string startStation, std::string endStation) {
+        std::string route = startStation + "->" + endStation;
+        auto& data = routeData[route];
+        return data.first / data.second;
+    }
+};
