@@ -29,4 +29,4 @@ public:
         auto& data = routeData[route];
         return data.first / data.second;
     }
-};
+}
